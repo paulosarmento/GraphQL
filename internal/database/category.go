@@ -43,6 +43,15 @@ func (c *Category) FindAll() ([]Category, error) {
 	}
 	return categories, nil
 }
+func (c *Category) FindByCourseID(courseID string) (Category, error) {
+	var id, name, description string
+	err := c.db.QueryRow("SELECT c.id, c.name, c.description FROM categories c JOIN courses co ON c.id = co.category_id WHERE co.id = $1", courseID).
+		Scan(&id, &name, &description)
+	if err != nil {
+		return Category{}, err
+	}
+	return Category{ID: id, Name: name, Description: description}, nil
+}
 
 // graphql
 // mutation createCategory {
@@ -54,7 +63,7 @@ func (c *Category) FindAll() ([]Category, error) {
 // }
 
 // mutation createCourse {
-//   createCourse(input: {name: "FullCycle", description: "THE BEST!", categoryId:"5939f8fc-1ed0-4030-924e-513f525d6a30"}){
+//   createCourse(input: {name: "FullCycle", description: "THE BEST!", categoryId:"9b5a78dc-5c53-40e2-bf7c-4de88af293c8"}){
 //     id
 //     name
 //   }
@@ -64,6 +73,7 @@ func (c *Category) FindAll() ([]Category, error) {
 //   categories {
 //     id
 //     name
+//     description
 //   }
 // }
 // query queryCategoriesWithCourses {
@@ -74,6 +84,17 @@ func (c *Category) FindAll() ([]Category, error) {
 //       id
 //       name
 //     }
+//   }
+// }
+// query querycoursesWithCategory {
+//   courses {
+//     id
+//     name
+//     description
+//     category {
+//       name
+//     }
+
 //   }
 // }
 // query querycourses {
