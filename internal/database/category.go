@@ -64,7 +64,16 @@ func (c *Category) FindAll() ([]Category, error) {
 //   categories {
 //     id
 //     name
-//     description
+//   }
+// }
+// query queryCategoriesWithCourses {
+//   categories {
+//     id
+//     name
+//     courses {
+//       id
+//       name
+//     }
 //   }
 // }
 // query querycourses {
